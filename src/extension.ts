@@ -50,20 +50,44 @@ export function activate(context: vscode.ExtensionContext) {
     const imgLocationOnDisk = vscode.Uri.file(
       path.join(context.extensionPath, "resources", "assets", "img.jpg")
     );
+
     const imgUri = pannel.webview.asWebviewUri(imgLocationOnDisk);
-    console.log("ImageUri",imgUri);
-    
+
+    const cssUri = pannel.webview.asWebviewUri(
+      vscode.Uri.file(
+        path.join(context.extensionPath, "resources", "style.css")
+      )
+    );
+
     return `<!DOCTYPE html>
     <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
-    </head>
-    <body>
-      <img src="${imgUri}">
-    </body>
-    </html>`;
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Snippet Generator</title>
+      </head>
+      <link rel="stylesheet" href="${cssUri}">
+      <body>
+          <img src="${imgUri}">
+        <button>Add Snippet</button>
+        <div style="display: flex; flex-direction: column; margin-top: 32px;">
+          <input
+            type="text"
+            placeholder="Enter Text ... "
+            style="padding: 8px 16px; font-size: 1.5rem;"
+          />
+        </div>
+    
+        <h1></h1>
+        <ul>
+          <li><span>List Item One</span></li>
+          <li><span>List Item Two</span></li>
+          <li><span>List Item Three</span></li>
+        </ul>
+        <script></script>
+      </body>
+    </html>
+    `;
   }
 }
 
