@@ -1,0 +1,7 @@
+{
+  "First Ext": {
+    "prefix": "!max",
+    "body": ["console.log(\"Maxwell is cool\");", "$1"],
+    "description": "This is a test"
+  }
+}
