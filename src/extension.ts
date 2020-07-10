@@ -6,57 +6,81 @@ import * as url from "url";
 
 // The activate function is called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
-  // To register a command use {vscode.commands.registerCommand("commandId",()=>{})}
-  // To make the command available in the command pallet add your command in the package.json
-  /**
-   * contributes:{
-   * commands:[{
-   * "command":"commandId",
-   * "title":"The title of the command"
-   * }]} */
-  //  If your extension is not activated then the command will not work
-  // Add
-  /**
-   * "activationEvents":[
-   * "onCommand:commandId"
-   * ]
-   */
+  let currentPannel: vscode.WebviewPanel | undefined = undefined;
 
-  console.log("Extension Activated");
-  // Get the path to the extension
+  context.subscriptions.push(
+    vscode.commands.registerCommand("firstextension.start", () => {
+      // Get the column to show the webview in : The current column that has focus
+      const columnToShowIn = vscode.window.activeTextEditor
+        ? vscode.window.activeTextEditor.viewColumn
+        : undefined;
 
-  let ds = vscode.commands.registerCommand("firstextension.start", () => {
-    vscode.window.showInformationMessage("Webview extension started");
-
-    const pannel = vscode.window.createWebviewPanel(
-      "webview",
-      "Webview Extension",
-      vscode.ViewColumn.One,
-      {
-        enableScripts: true,
+      if (currentPannel) {
+        vscode.window.showInformationMessage("Extension is Running ... ");
+        // If we already have an active pannel just reveal it
+        currentPannel.reveal(columnToShowIn);
+      } else {
+        vscode.window.showInformationMessage("Extension Started");
+        currentPannel = vscode.window.createWebviewPanel(
+          "webview",
+          "Webview Extension",
+          vscode.ViewColumn.One,
+          { enableScripts: true }
+        );
       }
+
+      currentPannel.webview.html = getWebviewContent(currentPannel);
+
+      // Called when the webview pannel is closed
+      currentPannel.onDidDispose(
+        () => {
+          // Stop doing stuff when the pannel is closed
+          currentPannel = undefined;
+        },
+        null,
+        context.subscriptions
+      );
+
+      // Get state change when the pannels visibility or column changes
+      currentPannel.onDidChangeViewState((e) => {
+        console.log("View State Change", e.webviewPanel.active);
+      });
+    })
+  );
+
+  // Get the resource Uri
+  function getResourceUri(pannel: vscode.WebviewPanel, ...paths: string[]) {
+    return pannel.webview.asWebviewUri(
+      vscode.Uri.file(path.join(context.extensionPath, ...paths))
     );
+  }
 
-    pannel.webview.html = getWebviewContent(context, pannel);
-  });
-
-  context.subscriptions.push(ds);
-
+  // Read the svg files
+  function readFileData(...paths: string[]) {
+    const filePath = path.join(context.extensionPath, ...paths);
+    return fs.readFileSync(filePath, { encoding: "utf-8" });
+  }
   // Load the webview.html file
-  function getWebviewContent(
-    context: vscode.ExtensionContext,
-    pannel: vscode.WebviewPanel
-  ) {
-    const imgLocationOnDisk = vscode.Uri.file(
-      path.join(context.extensionPath, "resources", "assets", "img.jpg")
+  function getWebviewContent(pannel: vscode.WebviewPanel) {
+    const imgUri = getResourceUri(pannel, "resources", "assets", "img.jpg");
+    const cssUri = getResourceUri(pannel, "resources", "style.css");
+    const deleteIconUri = getResourceUri(
+      pannel,
+      "resources",
+      "assets",
+      "delete.svg"
     );
-
-    const imgUri = pannel.webview.asWebviewUri(imgLocationOnDisk);
-
-    const cssUri = pannel.webview.asWebviewUri(
-      vscode.Uri.file(
-        path.join(context.extensionPath, "resources", "style.css")
-      )
+    const expandIconUri = getResourceUri(
+      pannel,
+      "resources",
+      "assets",
+      "expand.svg"
+    );
+    const editIconUri = getResourceUri(
+      pannel,
+      "resources",
+      "assets",
+      "edit.svg"
     );
 
     return `<!DOCTYPE html>
@@ -68,7 +92,6 @@ export function activate(context: vscode.ExtensionContext) {
       </head>
       <link rel="stylesheet" href="${cssUri}">
       <body>
-          <img src="${imgUri}">
         <button>Add Snippet</button>
         <div style="display: flex; flex-direction: column; margin-top: 32px;">
           <input
@@ -78,20 +101,31 @@ export function activate(context: vscode.ExtensionContext) {
           />
         </div>
     
-        <h1></h1>
         <ul>
-          <li><span>List Item One</span></li>
-          <li><span>List Item Two</span></li>
-          <li><span>List Item Three</span></li>
+          <li><span>List Item One</span> ${readFileData(
+            "resources",
+            "assets",
+            "delete.svg"
+          )}</li>
+          <li><span>List Item One</span> ${readFileData(
+            "resources",
+            "assets",
+            "expand.svg"
+          )}</li>
+          <li><span>List Item One</span> ${readFileData(
+            "resources",
+            "assets",
+            "edit.svg"
+          )}</li>
         </ul>
-        <script></script>
+
       </body>
     </html>
     `;
   }
 }
 
-// this method is called when your extension is deactivated
+// This method is called when your extension is deactivated
 export function deactivate() {
   console.log("The extension has been deactivated");
 }
