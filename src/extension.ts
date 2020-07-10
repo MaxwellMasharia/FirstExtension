@@ -37,26 +37,44 @@ export function activate(context: vscode.ExtensionContext) {
       }
     );
 
-    pannel.webview.html = getWebviewContent(context, pannel);
+    pannel.webview.html = getWebviewContent(pannel);
   });
 
   context.subscriptions.push(ds);
 
-  // Load the webview.html file
-  function getWebviewContent(
-    context: vscode.ExtensionContext,
-    pannel: vscode.WebviewPanel
-  ) {
-    const imgLocationOnDisk = vscode.Uri.file(
-      path.join(context.extensionPath, "resources", "assets", "img.jpg")
+  // Get the resource Uri
+  function getResourceUri(pannel: vscode.WebviewPanel, ...paths: string[]) {
+    return pannel.webview.asWebviewUri(
+      vscode.Uri.file(path.join(context.extensionPath, ...paths))
     );
+  }
 
-    const imgUri = pannel.webview.asWebviewUri(imgLocationOnDisk);
-
-    const cssUri = pannel.webview.asWebviewUri(
-      vscode.Uri.file(
-        path.join(context.extensionPath, "resources", "style.css")
-      )
+  // Read the svg files
+  function readFileData(...paths: string[]) {
+    const filePath = path.join(context.extensionPath, ...paths);
+    return fs.readFileSync(filePath, { encoding: "utf-8" });
+  }
+  // Load the webview.html file
+  function getWebviewContent(pannel: vscode.WebviewPanel) {
+    const imgUri = getResourceUri(pannel, "resources", "assets", "img.jpg");
+    const cssUri = getResourceUri(pannel, "resources", "style.css");
+    const deleteIconUri = getResourceUri(
+      pannel,
+      "resources",
+      "assets",
+      "delete.svg"
+    );
+    const expandIconUri = getResourceUri(
+      pannel,
+      "resources",
+      "assets",
+      "expand.svg"
+    );
+    const editIconUri = getResourceUri(
+      pannel,
+      "resources",
+      "assets",
+      "edit.svg"
     );
 
     return `<!DOCTYPE html>
@@ -68,6 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
       </head>
       <link rel="stylesheet" href="${cssUri}">
       <body>
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
           <img src="${imgUri}">
         <button>Add Snippet</button>
         <div style="display: flex; flex-direction: column; margin-top: 32px;">
@@ -78,13 +97,12 @@ export function activate(context: vscode.ExtensionContext) {
           />
         </div>
     
-        <h1></h1>
         <ul>
-          <li><span>List Item One</span></li>
-          <li><span>List Item Two</span></li>
-          <li><span>List Item Three</span></li>
+          <li><span>List Item One</span> ${readFileData("resources","assets","delete.svg")}</li>
+          <li><span>List Item One</span> ${readFileData("resources","assets","expand.svg")}</li>
+          <li><span>List Item One</span> ${readFileData("resources","assets","edit.svg")}</li>
         </ul>
-        <script></script>
+
       </body>
     </html>
     `;

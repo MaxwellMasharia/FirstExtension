@@ -58,6 +58,7 @@ ul li {
     background: var(--vscode-dropdown-background);
     margin-top: 4px;
     width: 90%;
+    display: flex;
 }
 
 ul li span {
@@ -65,8 +66,9 @@ ul li span {
     font-size: var(--vscode-editor-font-size);
     font-weight: var(--vscode-editor-font-weight);
     font-family: var(--vscode-editor-font-family);
+    flex: 1;
 }
 
-img {
-    margin: 32px;
+svg {
+    fill: #fff;
 }
