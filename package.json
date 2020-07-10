@@ -10,9 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:firstextension.start",
-    "onCommand:firstextension.key",
-    "onCommand:catcoding.start"
+    "onCommand:firstextension.start"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -20,22 +18,12 @@
       {
         "command": "firstextension.start",
         "title": "Start Extension"
-      },
-      {
-        "command": "catcoding.start",
-        "title": "Cat Coding"
       }
     ],
     "keybindings": [
       {
-        "command": "catcoding.start",
+        "command": "firstextension.start",
         "key": "ctrl+shift+r"
-      }
-    ],
-    "snippets": [
-      {
-        "language": "javascript",
-        "path": "./src/snippets/snp.json"
       }
     ]
   },
