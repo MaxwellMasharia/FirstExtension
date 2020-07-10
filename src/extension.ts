@@ -2,6 +2,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
+import * as url from "url";
 
 // The activate function is called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
@@ -36,33 +37,33 @@ export function activate(context: vscode.ExtensionContext) {
       }
     );
 
-    // setTimeout(() => {
-    //   pannel.webview.postMessage({
-    //     message: "Maxwells Loves Java and Javascript",
-    //   });
-    // }, 5000);
-
-    pannel.webview.html = getWebviewContent(context);
-    // pannel.webview.onDidReceiveMessage(
-    //   ({ message }) => {
-    //     vscode.window.showInformationMessage(message);
-    //   },
-    //   undefined,
-    //   context.subscriptions
-    // );
+    pannel.webview.html = getWebviewContent(context, pannel);
   });
 
   context.subscriptions.push(ds);
 
   // Load the webview.html file
-  function getWebviewContent(context: vscode.ExtensionContext) {
-    // Get the location of the extension
-    const extensionPath = context.extensionPath;
-    // console.log("Extension Path : ", extensionPath);
-    const webviewFilePath = path.join(extensionPath, "media", "webview.html");
-    // console.log("Webview.html Path : ", webviewFilePath);
-
-    return fs.readFileSync(webviewFilePath, { encoding: "utf-8" });
+  function getWebviewContent(
+    context: vscode.ExtensionContext,
+    pannel: vscode.WebviewPanel
+  ) {
+    const imgLocationOnDisk = vscode.Uri.file(
+      path.join(context.extensionPath, "resources", "assets", "img.jpg")
+    );
+    const imgUri = pannel.webview.asWebviewUri(imgLocationOnDisk);
+    console.log("ImageUri",imgUri);
+    
+    return `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+    </head>
+    <body>
+      <img src="${imgUri}">
+    </body>
+    </html>`;
   }
 }
 
@@ -70,3 +71,13 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
   console.log("The extension has been deactivated");
 }
+
+/*
+ * Example of loading js from another file : External files
+ * const extensionPath = context.extensionPath;
+ * const scriptPathOnDisk = vscode.Uri.file(path.join(extensionPath,"media","main.js"));
+ * const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
+ *
+ * in html
+ * <script src="${scriptUri}"/>
+ */
