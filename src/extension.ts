@@ -2,7 +2,6 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import * as url from "url";
 
 // The activate function is called when the extension is activated
 export function activate(context: vscode.ExtensionContext) {

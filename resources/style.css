@@ -1,3 +1,7 @@
+:root {
+    --vscode-contrastActiveBorder: red;
+}
+
 * {
     margin: 0px;
     padding: 0px;
@@ -41,7 +45,7 @@ input[type="text"] {
 
 input[type="text"]:focus {
     outline: none;
-    border: 1px solid var(--vscode-button-hoverBackground);
+    border: 1px solid var(--vscode-focusBorder);
 }
 
 ul {
@@ -70,5 +74,5 @@ ul li span {
 }
 
 svg {
-    fill: #fff;
+    fill: var(--vscode-icon-foreground);
 }
