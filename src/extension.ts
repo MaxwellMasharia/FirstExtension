@@ -106,11 +106,10 @@ export function activate(context: vscode.ExtensionContext) {
             "assets",
             "delete.svg"
           )}</li>
-          <li><span>List Item One</span> ${readFileData(
-            "resources",
-            "assets",
-            "expand.svg"
-          )}</li>
+          <li><span>List Item One</span> 
+          ${readFileData("resources", "assets", "expand.svg")} 
+          ${readFileData("resources", "assets", "expand.svg")} 
+          ${readFileData("resources", "assets", "expand.svg")}</li>
           <li><span>List Item One</span> ${readFileData(
             "resources",
             "assets",

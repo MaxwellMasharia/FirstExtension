@@ -6,26 +6,18 @@
 - [x] Adding css,html,js files
 - [x] Communicating between the webview javascript and the extension Ts
 - [x] Ensuring that only one webview is open at a time {YES}
-- [ ] Getting the colors for all themes 
+- [ ] Getting the colors for all themes
 - [ ] Adding syntax-highlighting using `highlight.js`
 
 ## Colors to get
+**Use filter to get contrast**
 
-- [ ] Text Input background
-- [ ] Text Input border
-- [ ] Text Input border:focus
-- [ ] List item background
-- [ ] List item background:hover
-- [ ] List item background:focus
-- [ ] Icon fill
-- [ ] Icon background-circle background == icon:hover
-- [ ] Text colors
-- [ ] Text selection background colors
-- [ ] Drop down colors
-- [ ] Drop down item hover
-- [ ] Drop down item focus
-- [ ] Button background
-- [ ] Button hover
-
-
- 
+- [x] TextInputBackground == var(--vscode-input-background);
+- [x] TextInputBorder == var(--vscode-focusBorder);
+- [x] ListItemBackground == var(--vscode-dropdown-listBackground);
+- [x] Icon Fill == var(--vscode-icon-foreground);
+- [x] Text Color == var(--vscode-dropdown-foreground);
+- [x] Icon selection color == var(--vscode-editor-selectionBackground);
+- [x] Dropdown background color == var(--vscode-dropdown-listBackground);
+- [x] Button background color == var(--vscode-button-background);
+- [x] Button hover color == var(--vscode-button-hoverBackground);
